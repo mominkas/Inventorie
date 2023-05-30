@@ -1,4 +1,5 @@
 export default {
-    background: 'powderblue',
-    overlay: 'honeydew',
+    background: 'lightslategrey',
+    overlay: 'lightgrey',
+    borders: '',
 }
