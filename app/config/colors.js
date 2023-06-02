@@ -1,5 +1,5 @@
 export default {
-    background: 'lightslategrey',
+    background: 'seashell',
     overlay: 'lightgrey',
-    borders: '',
+    borders: ''
 }

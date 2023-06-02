@@ -1,15 +1,16 @@
-import { useState } from 'react';
-import { StyleSheet, Text, View, StatusBar, TextInput, ScrollView, Pressable, Alert, Dimensions} from 'react-native';
-import colors from '../config/colors';
+import { useState } from 'react'
+import { StyleSheet, Text, View, StatusBar, TextInput, ScrollView, Pressable, Alert, Dimensions} from 'react-native'
+import colors from '../config/colors'
 
-var height = Dimensions.get('window').height;
-var width = Dimensions.get('window').width;
+export var height = Dimensions.get('window').height
+export var width = Dimensions.get('window').width
 // var scrollHeight = height/4;
 
 
-export default function MainScreen(props) {
-    const [enteredLocationText, setEnteredLocationText] = useState('');
-    const [locations, setLocationSet] = useState(new Set());
+export default function MainScreen({navigation}) {
+    const [enteredLocationText, setEnteredLocationText] = useState('')
+    const [locations, setLocationSet] = useState(new Set())
+    const [items, setItemsList] = useState([])
     const setToArr = [...locations]
 
     function locationInputHandler(enteredText) {
@@ -17,9 +18,8 @@ export default function MainScreen(props) {
     }
     function addLocationHandler() {
         if (!locations.has(enteredLocationText)) {
-            // console.log(scrollHeight);
-            setLocationSet(currentLocationMap => new Set([...currentLocationMap, enteredLocationText])); 
-            // scrollHeight = scrollHeight + (height*0.2);
+            setLocationSet(currentLocationMap => new Set([...currentLocationMap, enteredLocationText]));
+
         } else {
             Alert.alert("Location Already Added", "Please add a new location",
                 [{ text: "OK"}])
@@ -40,10 +40,12 @@ export default function MainScreen(props) {
                         style={styles.textInput} 
                         placeholder = 'Add a location'
                         onChangeText={locationInputHandler}
+                        
                     />
 
                     <Pressable style={styles.button} onPress={addLocationHandler}>
-                        <Text style={styles.text}>Enter</Text>
+                        <Text style={{fontSize: 15,
+                                      fontWeight: 'bold'}}>Enter</Text>
                     </Pressable>
 
                </View>
@@ -54,19 +56,17 @@ export default function MainScreen(props) {
                     width: '100%',
                     flexGrow: 0,
                     paddingBottom: '35%',
-                    // alignItems: 'flex-end',
-                    backgroundColor: colors.overlay,
+                    backgroundColor: colors.background,
                 }}>
                     {setToArr.map((location) => 
-                        <Pressable style={styles.locationDisplay} key={location}>
-                            <Text>
+                        <Pressable style={styles.locationDisplay} key={location} onPress={() => navigation.navigate('Inventory Screen', {items, setItemsList, location})}>
+                            <Text style={{fontSize: 20, alignItems: 'center', justifyContent: 'center'}}>
                                 {location}
                             </Text>
                         </Pressable>)}
 
                 </ScrollView>
                
-
             </View>
 
         </View>
@@ -76,7 +76,7 @@ export default function MainScreen(props) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: colors.background,
+        backgroundColor: colors.overlay,
         paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight:0,
     },
 
@@ -97,12 +97,12 @@ const styles = StyleSheet.create({
         flex: 1,
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
-        backgroundColor: colors.overlay,
+        backgroundColor: colors.background,
     },
 
     textInputBackground: {
         top: '0%',
-        height: '8%',
+        height: '10%',
         width: '100%',
         alignItems: 'flex-end',
         borderTopLeftRadius: 30,
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 30,
         justifyContent: 'space-evenly',
         marginBottom: '4%',
-        backgroundColor: colors.overlay,
+        backgroundColor: colors.background,
 
     },
 
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
         top: '15%',
         left: '5%',
         borderWidth: 3,
-        borderColor: '#daa520',
+        borderColor: 'navy',
         borderTopRightRadius: 10,
         borderTopLeftRadius: 10,
         borderBottomLeftRadius: 10,
@@ -135,6 +135,8 @@ const styles = StyleSheet.create({
         top: '15%',
         right: '5%',
         backgroundColor: colors.background,
+        borderWidth: 2,
+        borderColor: 'navy',
         borderTopRightRadius: 10,
         borderTopLeftRadius: 10,
         borderBottomLeftRadius: 10,
@@ -160,7 +162,7 @@ const styles = StyleSheet.create({
         marginLeft: '5%',
         marginBottom: '8%',
         borderWidth: 4,
-        borderColor: 'indigo',
+        borderColor: 'navy',
     },
 
 
