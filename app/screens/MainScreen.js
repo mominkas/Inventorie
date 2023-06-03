@@ -17,13 +17,20 @@ export default function MainScreen({navigation}) {
         setEnteredLocationText(enteredText);
     }
     function addLocationHandler() {
+        if (enteredLocationText == '') {
+            Alert.alert("This field cannot be empty", "Please enter a valid location name",
+                [{ text: "OK"}])
+            return
+        }
         if (!locations.has(enteredLocationText)) {
             setLocationSet(currentLocationMap => new Set([...currentLocationMap, enteredLocationText]));
+            setEnteredLocationText('')
 
         } else {
             Alert.alert("Location Already Added", "Please add a new location",
                 [{ text: "OK"}])
         }
+
         
     }
     return (
@@ -40,6 +47,7 @@ export default function MainScreen({navigation}) {
                         style={styles.textInput} 
                         placeholder = 'Add a location'
                         onChangeText={locationInputHandler}
+                        value={enteredLocationText}
                         
                     />
 
@@ -120,7 +128,7 @@ const styles = StyleSheet.create({
         top: '15%',
         left: '5%',
         borderWidth: 3,
-        borderColor: 'navy',
+        borderColor: 'black',
         borderTopRightRadius: 10,
         borderTopLeftRadius: 10,
         borderBottomLeftRadius: 10,
@@ -136,7 +144,7 @@ const styles = StyleSheet.create({
         right: '5%',
         backgroundColor: colors.background,
         borderWidth: 2,
-        borderColor: 'navy',
+        borderColor: 'black',
         borderTopRightRadius: 10,
         borderTopLeftRadius: 10,
         borderBottomLeftRadius: 10,
@@ -162,7 +170,7 @@ const styles = StyleSheet.create({
         marginLeft: '5%',
         marginBottom: '8%',
         borderWidth: 4,
-        borderColor: 'navy',
+        borderColor: 'black',
     },
 
 
