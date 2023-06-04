@@ -1,6 +1,7 @@
-import { useState } from 'react'
-import { StyleSheet, Text, View, StatusBar, TextInput, ScrollView, Pressable, Alert, Dimensions} from 'react-native'
+import { useState, useEffect } from 'react'
+import { StyleSheet, Text, View, StatusBar, TextInput, ScrollView, Pressable, Alert, Dimensions, SafeAreaView} from 'react-native'
 import colors from '../config/colors'
+import { greetingUser } from './LoginScreen'
 
 export var height = Dimensions.get('window').height
 export var width = Dimensions.get('window').width
@@ -10,8 +11,59 @@ export var width = Dimensions.get('window').width
 export default function MainScreen({navigation}) {
     const [enteredLocationText, setEnteredLocationText] = useState('')
     const [locations, setLocationSet] = useState(new Set())
-    const [items, setItemsList] = useState([])
+    const [items, setItemsList] = useState()
     const setToArr = [...locations]
+
+    useEffect(() => {
+        // Call the updateLists function whenever the items list changes
+        updateLists(greetingUser, Array.from(locations), items);
+      }, [items]);
+
+      useEffect(() => {
+        // Fetch items and locations when the component mounts
+        getItemsAndLocations();
+      }, []);
+
+
+
+
+    function getItemsAndLocations() {
+        const username = greetingUser; // Add the username here
+    
+        fetch(`http://127.0.0.1:5000/items?username=${username}`)
+          .then(response => response.json())
+          .then(data => {
+            if (data.items && data.locations) {
+              setLocationSet(new Set(data.locations));
+              setItemsList(data.items);
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+      }
+
+    function updateLists(username, locations) {
+        fetch('http://127.0.0.1:5000/update_lists', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            username: username,
+            locations: locations,
+            items: items,
+          }),
+        })
+          .then(response => response.json())
+          .then(data => {
+            console.log(data.message); // Lists updated successfully
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          })
+    }
+    
 
     function locationInputHandler(enteredText) {
         setEnteredLocationText(enteredText);
@@ -25,19 +77,21 @@ export default function MainScreen({navigation}) {
         if (!locations.has(enteredLocationText)) {
             setLocationSet(currentLocationMap => new Set([...currentLocationMap, enteredLocationText]));
             setEnteredLocationText('')
+            updateLists(greetingUser, Array.from(locations));
 
         } else {
             Alert.alert("Location Already Added", "Please add a new location",
                 [{ text: "OK"}])
         }
-
-        
     }
+
+
+
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
           
             <Text style={styles.welcomeText}>Hello,
-                <Text style={styles.nametext}> Momin!</Text>
+                <Text style={styles.nametext}> {greetingUser}!</Text>
             </Text>
             
             <View style={styles.overlay}>
@@ -77,7 +131,7 @@ export default function MainScreen({navigation}) {
                
             </View>
 
-        </View>
+        </SafeAreaView>
     );
 }
 

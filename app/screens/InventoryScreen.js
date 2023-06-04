@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, StatusBar, TextInput, ScrollView, Pressable, Alert, KeyboardAvoidingView, Modal} from 'react-native';
+import { StyleSheet, Text, View, StatusBar, Image, TextInput, ScrollView, Pressable, Alert, KeyboardAvoidingView, Modal, SafeAreaView} from 'react-native';
 import colors from '../config/colors';
 import { height } from './MainScreen';
 import Item from '../config/ItemClass';
@@ -17,9 +17,6 @@ export default function InventoryScreen({navigation, route}) {
     const [modalVisible, setModalVisible] = useState(false)
     const [onButtonStyle, setOnButtonStyle] = useState(styles.stockOnButton);
     const [offButtonStyle, setOffButtonStyle] = useState(styles.stockOffButton);
-    console.log('filtered: ' + filteredItems.length)
-    console.log('full: ' + fullItemList.length)
-    console.log('original ' + items.length)
 
     useEffect(() => {
        const filtered = fullItemList.filter((item) => item.location === location)
@@ -93,12 +90,12 @@ export default function InventoryScreen({navigation, route}) {
 
     return (
 
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
 
         <View style={styles.topTab}>
             <View style={styles.overTopTab}>
                 <View style={styles.topTopTab}>
-                <Text style={{fontSize: 20, fontWeight: 'bold'}}>{location}</Text>
+                    <Text style={{fontSize: 20, fontWeight: 'bold'}}>{location}</Text>
                 </View>
             </View>
         </View>
@@ -134,6 +131,10 @@ export default function InventoryScreen({navigation, route}) {
 
 
         <View style={styles.bottomTab}>
+
+            <Pressable onPress={() => navigation.goBack()} style={styles.container}>
+                <Image style={styles.image} source={require('../assets/arrow_back.png')}/>
+            </Pressable>
 
             <Pressable style={styles.addItemsButton}
                        onPress={() => setModalVisible(true)}>
@@ -202,7 +203,7 @@ export default function InventoryScreen({navigation, route}) {
                 </View>
             </View>
         </Modal>
-    </View>
+    </SafeAreaView>
     );
     
 }
@@ -279,7 +280,7 @@ const styles = StyleSheet.create({
         width: '90%',
         height:'80%',
         top: '10%',
-        alignItems:'center',
+        alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: colors.background,
         borderTopRightRadius: 100,
@@ -327,7 +328,7 @@ const styles = StyleSheet.create({
         height: '80%',
         width: '40%',
         marginVertical: 10,
-        marginHorizontal: 20,
+        marginHorizontal: 5,
         borderRadius: 10,
         borderWidth: 4,
         borderColor: colors.overlay,
@@ -341,7 +342,7 @@ const styles = StyleSheet.create({
         height: '80%',
         width: '40%',
         marginVertical: 10,
-        marginHorizontal: 20,
+        marginHorizontal: 5,
         borderRadius: 10,
         borderWidth: 4,
         borderColor: colors.overlay,
@@ -454,6 +455,11 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 10,
         borderBottomLeftRadius: 10,
         borderBottomRightRadius: 10,
+    },
+
+    image: {
+        height: 24,
+        width: 20,
     }
 
 })

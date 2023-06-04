@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, StatusBar, TextInput, Pressable, KeyboardAvoidingView, Modal} from 'react-native';
+import { StyleSheet, Text, View, StatusBar, TextInput, Pressable, KeyboardAvoidingView, Modal, SafeAreaView} from 'react-native';
 import colors from '../config/colors';
 import Item from '../config/ItemClass';
+import { greetingUser } from './LoginScreen';
 
 export default function EditingModal({navigation, route}) {
     const {item, filteredItems, setFilteredItems, fullItemList, setFullItemList} = route.params;
@@ -10,9 +11,6 @@ export default function EditingModal({navigation, route}) {
     const [enteredStockAlert, setStockAlert] = useState(false)
     const [onButtonStyle, setOnButtonStyle] = useState(styles.stockOnButton);
     const [offButtonStyle, setOffButtonStyle] = useState(styles.stockOffButton);
-    console.log('Editing Filterd: ' + filteredItems.length)
-    console.log('Editing Original: ' + fullItemList.length)
-
  
     function quantityInputHandler(enteredText) {
         if(enteredText == '') {
@@ -49,6 +47,7 @@ export default function EditingModal({navigation, route}) {
         setOffButtonStyle(styles.stockOffButtonSelected)
     }
 
+
     const editItem = (quantity, expiration, stockAlert) => {
         const updatedItem = new Item(item.location, item.itemName, parseInt(quantity), expiration, JSON.parse(stockAlert))
 
@@ -64,7 +63,7 @@ export default function EditingModal({navigation, route}) {
     }
 
     return(
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
         <Modal
         transparent={true}
         visible={true}>
@@ -83,11 +82,11 @@ export default function EditingModal({navigation, route}) {
                     <Text>Low Stock Alert: {item.itemStockAlert ? 'On':'Off'}</Text>
                     <View style={styles.stockButtonContainer}>
                     <Pressable style={onButtonStyle}
-                               onPress={() => {stockAlertInputHandler(true), onButtonHandler()}}>
+                               onPress={() => {stockAlertInputHandler('true'), onButtonHandler()}}>
                                <Text>ON</Text>
                     </Pressable>
                     <Pressable style={offButtonStyle}
-                               onPress={() => {stockAlertInputHandler(false), offButtonHandler()}}>
+                               onPress={() => {stockAlertInputHandler('false'), offButtonHandler()}}>
                         <Text>OFF</Text>
                     </Pressable>
                     </View>
@@ -109,7 +108,7 @@ export default function EditingModal({navigation, route}) {
                 </View>
             </View>
         </Modal>
-    </View>
+    </SafeAreaView>
     );
 }
 
